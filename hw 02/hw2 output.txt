@@ -1,0 +1,12 @@
+> require("vcd")
+> set.seed(13425)
+> ybinom <- rbinom(1000, 30, 0.2)
+> describe(ybinom)
+   vars    n mean  sd median trimmed  mad min max range skew kurtosis   se
+X1    1 1000 6.06 2.2      6    5.99 1.48   1  14    13 0.31    -0.03 0.07
+> hist(ybinom)
+> distplot(ybinom, type="binomial",size=30, main="Binomialness plot")
+> distplot(ybinom, type="poisson", main="Poissonness plot")
+> distplot(ybinom, type="nbinomial", main="Negative Binomialness plot")
+> d <- density(ybinom)
+> plot(d,main="kernel density of ybinom") # plots the results
