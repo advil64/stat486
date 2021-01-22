@@ -1,0 +1,51 @@
+> library(smooth)
+Loading required package: greybox
+Package "greybox", v0.5.8 loaded.
+This is package "smooth", v2.5.5
+Warning messages:
+1: package ‘smooth’ was built under R version 3.5.2 
+2: package ‘greybox’ was built under R version 3.5.2 
+> presidents <- read.csv(file="presidents.csv")
+> MovingAverage <- sma(presidents$presidents,order=5,silent=FALSE)
+> summary(MovingAverage)
+Time elapsed: 0.21 seconds
+Model estimated: SMA(5)
+Initial values were produced using backcasting.
+
+Loss function type: MSE; Loss function value: 146.16
+Error standard deviation: 12.1917
+Sample size: 120
+Number of estimated parameters: 2
+Number of degrees of freedom: 118
+Information criteria:
+     AIC     AICc      BIC     BICc 
+942.7095 942.8120 948.2845 948.5300 
+> MovingAverage <- sma(presidents$presidents,order=10,silent=FALSE)
+> summary(MovingAverage)
+Time elapsed: 0.17 seconds
+Model estimated: SMA(10)
+Initial values were produced using backcasting.
+
+Loss function type: MSE; Loss function value: 202.454
+Error standard deviation: 14.3487
+Sample size: 120
+Number of estimated parameters: 2
+Number of degrees of freedom: 118
+Information criteria:
+     AIC     AICc      BIC     BICc 
+981.8068 981.9093 987.3818 987.6273 
+> MovingAverage <- sma(presidents$presidents,order=20,silent=FALSE)
+> summary(MovingAverage)
+Time elapsed: 0.25 seconds
+Model estimated: SMA(20)
+Initial values were produced using backcasting.
+
+Loss function type: MSE; Loss function value: 237.831
+Error standard deviation: 15.5519
+Sample size: 120
+Number of estimated parameters: 2
+Number of degrees of freedom: 118
+Information criteria:
+     AIC     AICc      BIC     BICc 
+1001.133 1001.235 1006.707 1006.953 
+> 

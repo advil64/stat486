@@ -1,0 +1,95 @@
+> #install.packages as needed
+> library(datasets)
+> library(ggplot2)
+> library(cluster)
+> library(NbClust)
+> library(psych)
+> 
+> head(USArrests)
+           Murder Assault UrbanPop Rape Urbancat
+Alabama      13.2     236       58 21.2        0
+Alaska       10.0     263       48 44.5        0
+Arizona       8.1     294       80 31.0        1
+Arkansas      8.8     190       50 19.5        0
+California    9.0     276       91 40.6        1
+Colorado      7.9     204       78 38.7        1
+> describe(USArrests)
+          vars  n   mean    sd median trimmed    mad  min   max range  skew kurtosis    se
+Murder       1 50   7.79  4.36   7.25    7.53   5.41  0.8  17.4  16.6  0.37    -0.95  0.62
+Assault      2 50 170.76 83.34 159.00  168.47 110.45 45.0 337.0 292.0  0.22    -1.15 11.79
+UrbanPop     3 50  65.54 14.47  66.00   65.88  17.79 32.0  91.0  59.0 -0.21    -0.87  2.05
+Rape         4 50  21.23  9.37  20.10   20.36   8.60  7.3  46.0  38.7  0.75     0.08  1.32
+Urbancat*    5 50   1.48  0.50   1.00    1.48   0.00  1.0   2.0   1.0  0.08    -2.03  0.07
+> attach(USArrests)
+The following objects are masked from USArrests (pos = 3):
+
+    Assault, Murder, Rape, UrbanPop
+
+> 
+> USArrests$Urbancat <- as.factor(ifelse(UrbanPop > 66,1,0))  
+#median UrbanPop is 66 if the urban population is greater than 66, the urban cat is 1
+> summary(USArrests$Urbancat)
+ 0  1 
+26 24 
+> 
+> #save graph(s) in pdf
+> windows(7,7)
+>  pdf(file="C:/Users/jmard/OneDrive/Desktop/Computing and Graphics in Applied Statistics2020/Output/HW15_Figure.pdf")
+> 
+> Arrests_z <- data.frame(scale(USArrests[,1:2]))  #compute z scores
+> 
+> set.seed(1423)
+> 
+> #another choice for number of clusters is to use the NbClust library which runs
+> # many experiments and gives a distribution of potential number of clusters
+> 
+> library(NbClust)
+> #NbClust package provides 26 (documentation says 30) indices for determining the number of clusters and proposes
+> # to user the best clustering scheme from the different results obtained by varying
+> # all combinations of number of clusters, distance measures, and clustering methods
+> 
+> nc <- NbClust(Arrests_z, min.nc=2, max.nc=15, method="kmeans")
+*** : The Hubert index is a graphical method of determining the number of clusters.
+                In the plot of Hubert index, we seek a significant knee that corresponds to a 
+                significant increase of the value of the measure i.e the significant peak in Hubert
+                index second differences plot.
+
+*** : The D index is a graphical method of determining the number of clusters. 
+                In the plot of D index, we seek a significant knee (the significant peak in Dindex
+                second differences plot) that corresponds to a significant increase of the value of
+                the measure. 
+ 
+******************************************************************* 
+* Among all indices:                                                
+* 10 proposed 2 as the best number of clusters 
+* 5 proposed 3 as the best number of clusters 
+* 3 proposed 6 as the best number of clusters 
+* 1 proposed 7 as the best number of clusters 
+* 1 proposed 13 as the best number of clusters 
+* 3 proposed 14 as the best number of clusters 
+* 1 proposed 15 as the best number of clusters 
+
+                   ***** Conclusion *****                            
+ 
+* According to the majority rule, the best number of clusters is  2 
+ 
+ 
+******************************************************************* 
+> 
+> #The final model is built using kmeans and k = 2. The nstartvalue has been defined as 50 
+> #which means that R will try 50 different random starting assignments 
+> #and then select the one with the lowest within cluster variation.
+> 
+> ArrestCluster <- kmeans(Arrests_z[,1:2], 2, nstart = 50)  
+> ggplot(Arrests_z,aes(x = Murder,y = Assault, color= USArrests$Urbancat)) + geom_point()  #plot scaled Arrests by Urban Population categorization
+> 
+> table(ArrestCluster$cluster,USArrests$Urbancat)
+   
+     0  1
+  1  9 13
+  2 17 11
+> 
+> dev.off()
+null device 
+          1 
+> 

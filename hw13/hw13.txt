@@ -1,0 +1,47 @@
+> presidents <- read.csv(file="presidents.csv",header = TRUE)
+> head(presidents)
+  quarter presidents
+1       1         83
+2       2         87
+3       3         82
+4       4         75
+5       5         63
+6       6         50
+> str(presidents)
+'data.frame':   120 obs. of  2 variables:
+ $ quarter   : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ presidents: int  83 87 82 75 63 50 43 32 35 60 ...
+> library(faraway)
+with(presidents,{
+plot(presidents ~ quarter, col=gray(0.1))
+f <- loess(presidents ~ quarter,span=0.05)
+i <- order(quarter)
+lines(f$x[i],f$fitted[i])
+})
+if(FALSE){
+    "This dataset seems pretty noisy so we don't want to overfit the data by choosing a small span value.
+    However we also want to choose a value that is descriptive enough to understand the overall pattern.
+    I think a span of 0.2 does well to meet both expectations."
+}
+> with(presidents,{
++ plot(presidents ~ quarter, col=gray(0.1))
++ f <- loess(presidents ~ quarter,span=0.05)
++ i <- order(quarter)
++ lines(f$x[i],f$fitted[i])
++ })
+Warning message:
+In simpleLoess(y, x, w, span, degree = degree, parametric = parametric,  :
+  k-d tree limited by memory. ncmax= 200
+> if(FALSE){
++     "This dataset seems pretty noisy so we don't want to overfit the data by choosing a small span value.
++     However we also want to choose a value that is descriptive enough to understand the overall pattern.
++     I think a span of 0.2 does well to meet both expectations."
++ }
+> library(sm) #install if not already installed
+Package 'sm', version 2.2-5.4: type help(sm) for summary information
+> with(presidents,sm.regression(x=quarter,y=presidents,h=.2))
+> if(FALSE){
++     "Again, a kernel density function with h=0.2 seems to overfit the data I would most likely chose 
++     h=0.8"
++ }
+> 
